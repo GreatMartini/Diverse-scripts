@@ -1,0 +1,2 @@
+make
+./BrillWaves problem.input

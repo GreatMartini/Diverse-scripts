@@ -1,0 +1,1 @@
+This document is a report on a project of digital signal processing coded in "java" on "processing". The project was a Sierpinsky pyramid shaped music visualizer that aimed to recognize fundamental notes in an audio file. The colours used to light the pyramid were extracted from Alexander Scriabin's synesthesic colour association.

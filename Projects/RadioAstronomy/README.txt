@@ -1,0 +1,1 @@
+In this project the rotation speed of the Milky Way was measured and calculated with a Radio Antena at the Paris Institute for Astrophysics. The code plots the theoritical and experimental rotation speed and calculates the lack of mass between the predictions and the empirical values.

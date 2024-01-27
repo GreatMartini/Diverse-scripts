@@ -1,0 +1,1921 @@
+################################ Diccionario de variables ####################
+########## CAMPOS: #################
+# Precision: Todos los campos tensoriales son con los indices abajo (excepto por el vector de shift o si se especifica)
+#
+# Phi: Logaritmo del factor conforme
+# gammac_ij: Componente ij de la metrica conforme 
+# A_ij: componente ij de la curvatura extrinseca sin traza y conforme (En este codigo hace uso de las propiedades de simetria)
+# trK: Traza de la curvatura extrinseca
+# alpha: La funcion de Lapse
+# beta_i: Componenete i del vector de shift
+# Gam_i: Funcion de coneccion conforme i
+# 
+########## Variables auxiliares: #################
+# div_beta: Divergencia del vector de Shift
+# Psi1TF_ij: Termino sin traza en la ecuacion de evolucion de la curvatura extrinseca conforme sin traza 
+# C_ijk: Simbolo de Christoffel conforme de segunda especie donde el primer indice representa el indice superior -> C^i_(jk)
+# Cd_ijk: Sibolo de Christoffel conforme de primera especie
+# falpha: Funcion de Lapse de alpha, en este caso Bonna-Maso
+# Detgammac: Determinante de la metrica conforme
+# iDetgammac: Inversa del determinante de la metrica conforme
+# gammacu_ij: Termino ij de la metrica conforme con indices arriba
+# R_ij: Componente ij del tensor de Ricci
+# Rc_ij: Componente ij del tensor de Ricci conforme
+# Rp_ij: Componente ij del tensor suplementario para calcular el tensor de Ricci a partir del tensor de Ricci conforme -> R_ij=Rc_ij+Rp_ij
+# R: Escalar de Ricci
+# dalpha_ij: Coeficiente ij de la matriz de la doble derivada covariante de alpha (derivada no conforme)
+# trdalpha: Traza de la doble derivada covariante de alpha (derivada no conforme)
+# Au_ij: Coeficiente ij de la curvatura extrinseca sin traza conforme
+# Am_ij: Coeficiente ij de la curvatura extrinseca sin traza conforme con el primer indice arriba y el segundo abajo
+# gamma_ij: Coeficiente ij de la metrica fisica
+# gammau_ij: Coeficiente ij de la metrica fisica con indices arriba
+# Detgamma: Determinante de la metrica fisica
+# iDetgamma: Inversa del determinante de la metrica fisica
+#
+########## Campos de analisis: #################
+# q: Funcion q de la metrica de Brill
+# Dc: Determinante de la metrica conforme
+# Psi: Factor conforme
+# D: Determinante de la metrica fisica
+# HamCon: Constriccion hamiltoniana
+# MomCon_i: Constriccion de momento de la componente i
+#
+########## Variables de analisis auxiliares: #################
+# Ademas de las variables estipuladas anteriorment, se tienen
+# qfunction: funcion q de la metrica de las ondas de Brill
+# K_ij: Componente ij de la curvatura extrinseca
+PDEProblem:
+  head: #Se declara la cabecera
+    name: Brill Waves #Nombre del Problema
+    author: Christophe Martini #Nombre del autor
+    version: #Version
+      -self-closing: 'true' #Esta linea se pone para dejar la informacion vacia sin que haya problema de lectura
+  coordinates: #Se declaran las coordenadas
+    spatialCoordinates: #Coordenadas espaciales
+      spatialCoordinate: [x, y, z] #Nombres de las coordenada espaciales
+    timeCoordinate: t #Coordenada temporal
+  fields: #Se declaran los campos (variables a evolucionar en el tiempo)
+    field: [Phi, gammac_xx, gammac_xy, gammac_xz, gammac_yx, gammac_yy, gammac_yz,
+      gammac_zx, gammac_zy, gammac_zz, A_xx, A_xy, A_xz, A_yy, A_yz, A_zz, trK, alpha,
+      beta_x, beta_y, beta_z, Gam_x, Gam_y, Gam_z]
+  auxiliaryVariables: # Se declaran todas las variables auxiliares
+    auxiliaryVariable: [div_beta, Psi1TF_xx, Psi1TF_xy, Psi1TF_xz, Psi1TF_yy, Psi1TF_yz,
+      Psi1TF_zz, C_xxx, C_xxy, C_xxz, C_xyy, C_xyz, C_xzz, C_yxx, C_yxy, C_yxz, C_yyy,
+      C_yyz, C_yzz, C_zxx, C_zxy, C_zxz, C_zyy, C_zyz, C_zzz, Cd_xxx, Cd_xxy, Cd_xxz,
+      Cd_xyy, Cd_xyz, Cd_xzz, Cd_yxx, Cd_yxy, Cd_yxz, Cd_yyy, Cd_yyz, Cd_yzz, Cd_zxx,
+      Cd_zxy, Cd_zxz, Cd_zyy, Cd_zyz, Cd_zzz, falpha, Detgammac, iDetgammac, gammacu_xx,
+      gammacu_xy, gammacu_xz, gammacu_yx, gammacu_yy, gammacu_yz, gammacu_zx, gammacu_zy,
+      gammacu_zz, R_xx, R_xy, R_xz, R_yy, R_yz, R_zz, Rc_xx, Rc_xy, Rc_xz, Rc_yy,
+      Rc_yz, Rc_zz, Rp_xx, Rp_xy, Rp_xz, Rp_yy, Rp_yz, Rp_zz, R, dalpha_xx, dalpha_xy,
+      dalpha_xz, dalpha_yy, dalpha_yz, dalpha_zz, trdalpha, Au_xx, Au_xy, Au_xz, Au_yy,
+      Au_yz, Au_zz, Am_xx, Am_xy, Am_xz, Am_yy, Am_yz, Am_zz, Am_yx, Am_zx, Am_zy,
+      gamma_xx, gamma_xy, gamma_xz, gamma_xy, gamma_yy, gamma_yz, gamma_xz, gamma_yz,
+      gamma_zz, gammau_xx, gammau_xy, gammau_xz, gammau_yx, gammau_yy, gammau_yz,
+      gammau_zx, gammau_zy, gammau_zz, Detgamma, iDetgamma]
+  analysisFields: # Se declararan los campos de analisis
+    analysisField: [q, Dc, Psi, D, Rscalar, HamCon, MomCon_x, MomCon_y, MomCon_z]
+  auxiliaryAnalysisVariables: # Se declara las variable de analisis
+    auxiliaryAnalysisVariable: [div_beta, Psi1TF_xx, Psi1TF_xy, Psi1TF_xz, Psi1TF_yy,
+      Psi1TF_yz, Psi1TF_zz, C_xxx, C_xxy, C_xxz, C_xyy, C_xyz, C_xzz, C_yxx, C_yxy,
+      C_yxz, C_yyy, C_yyz, C_yzz, C_zxx, C_zxy, C_zxz, C_zyy, C_zyz, C_zzz, Cd_xxx,
+      Cd_xxy, Cd_xxz, Cd_xyy, Cd_xyz, Cd_xzz, Cd_yxx, Cd_yxy, Cd_yxz, Cd_yyy, Cd_yyz,
+      Cd_yzz, Cd_zxx, Cd_zxy, Cd_zxz, Cd_zyy, Cd_zyz, Cd_zzz, falpha, Detgammac, iDetgammac,
+      gammacu_xx, gammacu_xy, gammacu_xz, gammacu_yx, gammacu_yy, gammacu_yz, gammacu_zx,
+      gammacu_zy, gammacu_zz, R_xx, R_xy, R_xz, R_yy, R_yz, R_zz, Rc_xx, Rc_xy, Rc_xz,
+      Rc_yy, Rc_yz, Rc_zz, Rp_xx, Rp_xy, Rp_xz, Rp_yy, Rp_yz, Rp_zz, R, dalpha_xx,
+      dalpha_xy, dalpha_xz, dalpha_yy, dalpha_yz, dalpha_zz, trdalpha, Au_xx, Au_xy,
+      Au_xz, Au_yy, Au_yz, Au_zz, Am_xx, Am_xy, Am_xz, Am_yy, Am_yz, Am_zz, Am_yx,
+      Am_zx, Am_zy, gamma_xx, gamma_xy, gamma_xz, gamma_xy, gamma_yy, gamma_yz, gamma_xz,
+      gamma_yz, gamma_zz, gammau_xx, gammau_xy, gammau_xz, gammau_yx, gammau_yy, gammau_yz,
+      gammau_zx, gammau_zy, gammau_zz, Detgamma, iDetgamma, qfunction, K_xx, K_xy, K_xz, K_yy, K_yz, K_zz,
+       Ku_xx, Ku_xy, Ku_xz, Ku_yy, Ku_yz, Ku_zz]
+  parameters: # Se declaran los parametros 
+    parameter: 
+    - name: a0 # Amplitud de la onda de Brill
+      type: REAL
+      defaultValue: '3.0'
+    - name: lambda_r # Parametro de tamano de la onda de Brill en la direccion radial
+      type: REAL
+      defaultValue: '1'
+    - name: lambda_z # Parametro de tamano de la onda de Brill en la direccion z
+      type: REAL
+      defaultValue: '1'
+    - name: tend # Tiempo maximo de simulacion
+      type: REAL
+      defaultValue: '4.0'
+    - name: rc # Radio critico por si resulta necesario (Para evitar singularidades en el 0)
+      type: REAL
+      defaultValue: '0'
+  models: # Se declara el modelo
+    model:
+      name: Einstein #Nombramos el modelo
+      id: 0126ce94-2d69-3772-b7c1-69ae4176aab7 #Numero de identificacion del modelo (Llenar el campo en la interfaz de usuario)
+  region: # Se declara la region
+    name: main # Nombramos la region
+    interiorModels: #Declaramos el modelo a aplicar
+      interiorModel: Einstein
+    spatialDomain: # Definimos el dominio de simulacion para la region
+      coordinateLimits:
+      - coordinate: x
+        coordinateMin:
+          mathML: '-2.475'
+        coordinateMax:
+          mathML: '2.475'
+      - coordinate: y
+        coordinateMin:
+          mathML: '-2.475'
+        coordinateMax:
+          mathML: '2.475'
+      - coordinate: z
+        coordinateMin:
+          mathML: '-2.475'
+        coordinateMax:
+          mathML: '2.475'
+    initialConditions: # Se declaran la condiciones iniciales
+      initialCondition:
+      - mathExpressions:
+          mathExpression:
+          - mathML: qfunction=a0*((x)^2+(y)^2)*exp((-((x)^2+(y)^2)/(lambda_r^2))-(z^2)/(lambda_z^2))
+          - mathML: gammac_xx=1+((x)^2)/((x)^2+(y)^2)*(exp(2*qfunction)-1)
+          - mathML: gammac_xy=x*y/(x^2+y^2)*(exp(2*qfunction)-1)
+          - mathML: gammac_xz=0
+          - mathML: gammac_yx=gammac_xy
+          - mathML: gammac_yy=1+((y)^2)/((x)^2+(y)^2)*(exp(2*qfunction)-1)
+          - mathML: gammac_yz=0
+          - mathML: gammac_zx=gammac_xz
+          - mathML: gammac_zy=gammac_yz
+          - mathML: gammac_zz=exp(2*qfunction)
+          - mathML: Phi=0
+          - mathML: A_xx=0
+          - mathML: A_xy=0
+          - mathML: A_xz=0
+          - mathML: A_yy=0
+          - mathML: A_yz=0
+          - mathML: A_zz=0
+          - mathML: trK=0
+          - mathML: alpha=1
+          - mathML: beta_x=0
+          - mathML: beta_y=0
+          - mathML: beta_z=0
+          - mathML: Gam_x=0
+          - mathML: Gam_y=0
+          - mathML: Gam_z=0
+      - applyIf: # Condiciones iniciales al interior del radio critico
+          mathML: x^2+y^2<=rc^2
+        mathExpressions:
+          mathExpression:
+          - mathML: qfunction=0 
+          - mathML: gammac_xx=1
+          - mathML: gammac_yy=1  
+          - mathML: gammac_xy=0
+          - mathML: gammac_xz=0
+          - mathML: gammac_yx=gammac_xy
+          - mathML: gammac_yz=0
+          - mathML: gammac_zx=gammac_xz
+          - mathML: gammac_zy=gammac_yz
+          - mathML: gammac_zz=1
+          - mathML: Phi=0
+          - mathML: A_xx=0
+          - mathML: A_xy=0
+          - mathML: A_xz=0
+          - mathML: A_yy=0
+          - mathML: A_yz=0
+          - mathML: A_zz=0
+          - mathML: trK=0
+          - mathML: alpha=1
+          - mathML: beta_x=0
+          - mathML: beta_y=0
+          - mathML: beta_z=0
+          - mathML: Gam_x=0
+          - mathML: Gam_y=0
+          - mathML: Gam_z=0
+  analysisFieldEquations: #Declaramos las ecuaciones de los campos de analisis
+    analysisFieldEquation:
+    - name:
+        -self-closing: 'true'
+      #Esta equacion se lee q=qfunction, todas las ecuaciones se leeran asi 
+      # (a exepcion de las ecuaciones de evolucion): nombre del campo es el valor a calcular, y los terminos del operado es el otro lado de la ecuacion
+      analysisField: q
+      operator: #Nombramos el operador para que se le pueda aplicar un operador de discretizacion posteriormente
+        name: Op 
+        term:
+          mathML: qfunction   
+    - name:
+        -self-closing: 'true'
+      analysisField: Dc
+      operator:
+        name: Op
+        term:
+          mathML: Detgammac
+    - name:
+        -self-closing: 'true'
+      analysisField: Psi
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)
+    - name:
+        -self-closing: 'true'
+      analysisField: D
+      operator:
+        name: Op
+        term:
+          mathML: Detgamma
+    - name:
+        -self-closing: 'true'
+      analysisField: Rscalar
+      operator:
+        name: Op
+        term:
+          mathML: R
+    - name:
+        -self-closing: 'true'
+      analysisField: HamCon
+      operator:
+        name: Op
+        term:
+          mathML: R+trK^2-(K_xx*Ku_xx+K_yy*Ku_yy+K_zz*Ku_zz+2*K_xy*Ku_xy+2*K_xz*Ku_xz+2*K_yz*Ku_yz)
+    - name:
+        -self-closing: 'true'
+      analysisField: MomCon_x
+      operator:
+        name: Op
+        term:
+        - mathML: gammacu_xx*Der(x,A_xx)
+        - mathML: gammacu_xy*Der(y,A_xx)
+        - mathML: gammacu_xz*Der(z,A_xx)
+        - mathML: gammacu_yx*Der(x,A_xy)
+        - mathML: gammacu_yy*Der(y,A_xy)
+        - mathML: gammacu_yz*Der(z,A_xy)
+        - mathML: gammacu_zx*Der(x,A_xz)
+        - mathML: gammacu_zy*Der(y,A_xz)
+        - mathML: gammacu_zz*Der(z,A_xz)
+        - mathML: Cd_xxx*Au_xx+Cd_xyy*Au_yy+Cd_xzz*Au_zz+2*(Cd_xxy*Au_xy+Cd_xxz*Au_xz+Cd_xyz*Au_yz)
+        - mathML: 6*Am_xx*Der(x,Phi)
+        - mathML: 6*Am_yx*Der(y,Phi)
+        - mathML: 6*Am_zx*Der(z,Phi)
+        - mathML: -0.666666666*gammacu_xx*gammac_xx*Der(x,trK)
+        - mathML: -0.666666666*gammacu_xy*gammac_yx*Der(x,trK)
+        - mathML: -0.666666666*gammacu_xz*gammac_zx*Der(x,trK)
+        - mathML: -0.666666666*gammacu_yx*gammac_xx*Der(y,trK)
+        - mathML: -0.666666666*gammacu_yy*gammac_yx*Der(y,trK)
+        - mathML: -0.666666666*gammacu_yz*gammac_zx*Der(y,trK)
+        - mathML: -0.666666666*gammacu_zx*gammac_xx*Der(z,trK)
+        - mathML: -0.666666666*gammacu_zy*gammac_yx*Der(z,trK)
+        - mathML: -0.666666666*gammacu_zz*gammac_zx*Der(z,trK)
+    - name:
+        -self-closing: 'true'
+      analysisField: MomCon_y
+      operator:
+        name: Op
+        term:
+        - mathML: gammacu_xx*Der(x,A_xy)
+        - mathML: gammacu_xy*Der(y,A_xy)
+        - mathML: gammacu_xz*Der(z,A_xy)
+        - mathML: gammacu_yx*Der(x,A_yy)
+        - mathML: gammacu_yy*Der(y,A_yy)
+        - mathML: gammacu_yz*Der(z,A_yy)
+        - mathML: gammacu_zx*Der(x,A_yz)
+        - mathML: gammacu_zy*Der(y,A_yz)
+        - mathML: gammacu_zz*Der(z,A_yz)
+        - mathML: Cd_yxx*Au_xx+Cd_yyy*Au_yy+Cd_yzz*Au_zz+2*(Cd_yxy*Au_xy+Cd_yxz*Au_xz+Cd_yyz*Au_yz)
+        - mathML: 6*Am_xy*Der(x,Phi)
+        - mathML: 6*Am_yy*Der(y,Phi)
+        - mathML: 6*Am_zy*Der(z,Phi)
+        - mathML: -0.666666666*gammacu_xx*gammac_xy*Der(x,trK)
+        - mathML: -0.666666666*gammacu_xy*gammac_yy*Der(x,trK)
+        - mathML: -0.666666666*gammacu_xz*gammac_zy*Der(x,trK)
+        - mathML: -0.666666666*gammacu_yx*gammac_xy*Der(y,trK)
+        - mathML: -0.666666666*gammacu_yy*gammac_yy*Der(y,trK)
+        - mathML: -0.666666666*gammacu_yz*gammac_zy*Der(y,trK)
+        - mathML: -0.666666666*gammacu_zx*gammac_xy*Der(z,trK)
+        - mathML: -0.666666666*gammacu_zy*gammac_yy*Der(z,trK)
+        - mathML: -0.666666666*gammacu_zz*gammac_zy*Der(z,trK) 
+    - name:
+        -self-closing: 'true'
+      analysisField: MomCon_z
+      operator:
+        name: Op
+        term:
+        - mathML: gammacu_xx*Der(x,A_xz)
+        - mathML: gammacu_xy*Der(y,A_xz)
+        - mathML: gammacu_xz*Der(z,A_xz)
+        - mathML: gammacu_yx*Der(x,A_yz)
+        - mathML: gammacu_yy*Der(y,A_yz)
+        - mathML: gammacu_yz*Der(z,A_yz)
+        - mathML: gammacu_zx*Der(x,A_zz)
+        - mathML: gammacu_zy*Der(y,A_zz)
+        - mathML: gammacu_zz*Der(z,A_zz)
+        - mathML: Cd_zxx*Au_xx+Cd_zyy*Au_yy+Cd_zzz*Au_zz+2*(Cd_zxy*Au_xy+Cd_zxz*Au_xz+Cd_zyz*Au_yz)
+        - mathML: 6*Am_xz*Der(x,Phi)
+        - mathML: 6*Am_yz*Der(y,Phi)
+        - mathML: 6*Am_zz*Der(z,Phi)
+        - mathML: -0.666666666*gammacu_xx*gammac_xz*Der(x,trK)
+        - mathML: -0.666666666*gammacu_xy*gammac_yz*Der(x,trK)
+        - mathML: -0.666666666*gammacu_xz*gammac_zz*Der(x,trK)
+        - mathML: -0.666666666*gammacu_yx*gammac_xz*Der(y,trK)
+        - mathML: -0.666666666*gammacu_yy*gammac_yz*Der(y,trK)
+        - mathML: -0.666666666*gammacu_yz*gammac_zz*Der(y,trK)
+        - mathML: -0.666666666*gammacu_zx*gammac_xz*Der(z,trK)
+        - mathML: -0.666666666*gammacu_zy*gammac_yz*Der(z,trK)
+        - mathML: -0.666666666*gammacu_zz*gammac_zz*Der(z,trK)         
+  auxiliaryAnalysisVariableEquations: # Definimos las variables de analisis (se aplica lo mismo que con la seccion anterior)
+    auxiliaryAnalysisVariableEquation:
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: falpha
+      operator:
+        name: Op
+        term:
+          mathML: 1+2/(alpha^2)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: qfunction
+      operator:
+        name: Op
+        term:
+          mathML: a0*(x^2+y^2)*exp((-(x^2+y^2)/(lambda_r^2))-(z^2)/(lambda_z^2))
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: div_beta
+      operator:
+        name: Op
+        term:
+        - mathML: Der(x, beta_x)
+        - mathML: Der(y, beta_y)
+        - mathML: Der(z, beta_z)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Detgammac
+      operator:
+        name: Op
+        term:
+          mathML: gammac_yy*gammac_zz*gammac_xx+(-gammac_yy*(gammac_xz^2))+(-gammac_zz*(gammac_xy^2))+(-(gammac_yz^2)*gammac_xx)+2*gammac_yz*gammac_xy*gammac_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: iDetgammac
+      operator:
+        name: Op
+        term:
+          mathML: 1/Detgammac
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_xx
+      operator:
+        name: Op
+        term:
+          mathML: iDetgammac*(gammac_yy*gammac_zz-gammac_yz^2)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_xy
+      operator:
+        name: Op
+        term:
+          mathML: iDetgammac*((-gammac_xy*gammac_zz)+gammac_yz*gammac_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_xz
+      operator:
+        name: Op
+        term:
+          mathML: iDetgammac*(gammac_xy*gammac_yz-gammac_yy*gammac_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_yy
+      operator:
+        name: Op
+        term:
+          mathML: iDetgammac*(gammac_xx*gammac_zz-gammac_xz^2)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_yz
+      operator:
+        name: Op
+        term:
+          mathML: iDetgammac*((-gammac_xx*gammac_yz)+gammac_xy*gammac_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_zz
+      operator:
+        name: Op
+        term:
+          mathML: iDetgammac*(gammac_xx*gammac_yy-gammac_xy^2)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_yx
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_xy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_zx
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammacu_zy
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_xx
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_xx
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_xy
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_xy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_xz
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_xy
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_yx
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_yy
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_yy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_yz
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_xz
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_zx
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_yz
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_zy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gamma_zz
+      operator:
+        name: Op
+        term:
+          mathML: exp(4*Phi)*gammac_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Detgamma
+      operator:
+        name: Op
+        term:
+          mathML: gamma_yy*gamma_zz*gamma_xx+(-gamma_yy*(gamma_xz^2))+(-gamma_zz*(gamma_xy^2))+(-(gamma_yz^2)*gamma_xx)+2*gamma_yz*gamma_xy*gamma_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: iDetgamma
+      operator:
+        name: Op
+        term:
+          mathML: 1/Detgamma
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_xx
+      operator:
+        name: Op
+        term:
+          mathML: iDetgamma*(gamma_yy*gamma_zz-gamma_yz^2)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_xy
+      operator:
+        name: Op
+        term:
+          mathML: iDetgamma*((-gamma_xy*gamma_zz)+gamma_yz*gamma_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_xz
+      operator:
+        name: Op
+        term:
+          mathML: iDetgamma*(gamma_xy*gamma_yz-gamma_yy*gamma_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_yy
+      operator:
+        name: Op
+        term:
+          mathML: iDetgamma*(gamma_xx*gamma_zz-gamma_xz^2)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_yz
+      operator:
+        name: Op
+        term:
+          mathML: iDetgamma*((-gamma_xx*gamma_yz)+gamma_xy*gamma_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_zz
+      operator:
+        name: Op
+        term:
+          mathML: iDetgamma*(gamma_xx*gamma_yy-gamma_xy^2)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_yx
+      operator:
+        name: Op
+        term:
+          mathML: gammau_xy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_zx
+      operator:
+        name: Op
+        term:
+          mathML: gammau_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: gammau_zy
+      operator:
+        name: Op
+        term:
+          mathML: gammau_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_xxx
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_xx*Der(x, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_xx*Der(x, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_xx*Der(x, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_xy*Der(x, gammac_yx)
+        - mathML: 0.5000000000000*gammacu_xy*Der(x, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_xy*Der(y, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_xz*Der(x, gammac_zx)
+        - mathML: 0.5000000000000*gammacu_xz*Der(x, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_xz*Der(z, gammac_xx)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_xxy
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_xx*Der(x, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_xx*Der(y, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_xx*Der(x, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_xy*Der(x, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_xy*Der(y, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_xy*Der(y, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_xz*Der(x, gammac_zy)
+        - mathML: 0.5000000000000*gammacu_xz*Der(y, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_xz*Der(z, gammac_xy)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_xxz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_xx*Der(x, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_xx*Der(z, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_xx*Der(x, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_xy*Der(x, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_xy*Der(z, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_xy*Der(y, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_xz*Der(x, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_xz*Der(z, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_xz*Der(z, gammac_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_xyy
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_xx*Der(y, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_xx*Der(y, gammac_xy)
+        - mathML: (-0.5000000000000)*gammacu_xx*Der(x, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_xy*Der(y, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_xy*Der(y, gammac_yy)
+        - mathML: (-0.5000000000000)*gammacu_xy*Der(y, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_xz*Der(y, gammac_zy)
+        - mathML: 0.5000000000000*gammacu_xz*Der(y, gammac_zy)
+        - mathML: (-0.5000000000000)*gammacu_xz*Der(z, gammac_yy)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_xyz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_xx*Der(y, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_xx*Der(z, gammac_xy)
+        - mathML: (-0.5000000000000)*gammacu_xx*Der(x, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_xy*Der(y, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_xy*Der(z, gammac_yy)
+        - mathML: (-0.5000000000000)*gammacu_xy*Der(y, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_xz*Der(y, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_xz*Der(z, gammac_zy)
+        - mathML: (-0.5000000000000)*gammacu_xz*Der(z, gammac_yz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_xzz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_xx*Der(z, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_xx*Der(z, gammac_xz)
+        - mathML: (-0.5000000000000)*gammacu_xx*Der(x, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_xy*Der(z, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_xy*Der(z, gammac_yz)
+        - mathML: (-0.5000000000000)*gammacu_xy*Der(y, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_xz*Der(z, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_xz*Der(z, gammac_zz)
+        - mathML: (-0.5000000000000)*gammacu_xz*Der(z, gammac_zz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_yxx
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_yx*Der(x, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_yx*Der(x, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_yx*Der(x, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_yy*Der(x, gammac_yx)
+        - mathML: 0.5000000000000*gammacu_yy*Der(x, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_yy*Der(y, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_yz*Der(x, gammac_zx)
+        - mathML: 0.5000000000000*gammacu_yz*Der(x, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_yz*Der(z, gammac_xx)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_yxy
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_yx*Der(x, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_yx*Der(y, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_yx*Der(x, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_yy*Der(x, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_yy*Der(y, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_yy*Der(y, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_yz*Der(x, gammac_zy)
+        - mathML: 0.5000000000000*gammacu_yz*Der(y, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_yz*Der(z, gammac_xy)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_yxz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_yx*Der(x, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_yx*Der(z, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_yx*Der(x, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_yy*Der(x, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_yy*Der(z, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_yy*Der(y, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_yz*Der(x, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_yz*Der(z, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_yz*Der(z, gammac_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_yyy
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_yx*Der(y, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_yx*Der(y, gammac_xy)
+        - mathML: (-0.5000000000000)*gammacu_yx*Der(x, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_yy*Der(y, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_yy*Der(y, gammac_yy)
+        - mathML: (-0.5000000000000)*gammacu_yy*Der(y, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_yz*Der(y, gammac_zy)
+        - mathML: 0.5000000000000*gammacu_yz*Der(y, gammac_zy)
+        - mathML: (-0.5000000000000)*gammacu_yz*Der(z, gammac_yy)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_yyz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_yx*Der(y, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_yx*Der(z, gammac_xy)
+        - mathML: (-0.5000000000000)*gammacu_yx*Der(x, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_yy*Der(y, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_yy*Der(z, gammac_yy)
+        - mathML: (-0.5000000000000)*gammacu_yy*Der(y, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_yz*Der(y, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_yz*Der(z, gammac_zy)
+        - mathML: (-0.5000000000000)*gammacu_yz*Der(z, gammac_yz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_yzz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_yx*Der(z, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_yx*Der(z, gammac_xz)
+        - mathML: (-0.5000000000000)*gammacu_yx*Der(x, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_yy*Der(z, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_yy*Der(z, gammac_yz)
+        - mathML: (-0.5000000000000)*gammacu_yy*Der(y, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_yz*Der(z, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_yz*Der(z, gammac_zz)
+        - mathML: (-0.5000000000000)*gammacu_yz*Der(z, gammac_zz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_zxx
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_zx*Der(x, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_zx*Der(x, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_zx*Der(x, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_zy*Der(x, gammac_yx)
+        - mathML: 0.5000000000000*gammacu_zy*Der(x, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_zy*Der(y, gammac_xx)
+        - mathML: 0.5000000000000*gammacu_zz*Der(x, gammac_zx)
+        - mathML: 0.5000000000000*gammacu_zz*Der(x, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_zz*Der(z, gammac_xx)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_zxy
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_zx*Der(x, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_zx*Der(y, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_zx*Der(x, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_zy*Der(x, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_zy*Der(y, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_zy*Der(y, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_zz*Der(x, gammac_zy)
+        - mathML: 0.5000000000000*gammacu_zz*Der(y, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_zz*Der(z, gammac_xy)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_zxz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_zx*Der(x, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_zx*Der(z, gammac_xx)
+        - mathML: (-0.5000000000000)*gammacu_zx*Der(x, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_zy*Der(x, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_zy*Der(z, gammac_yx)
+        - mathML: (-0.5000000000000)*gammacu_zy*Der(y, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_zz*Der(x, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_zz*Der(z, gammac_zx)
+        - mathML: (-0.5000000000000)*gammacu_zz*Der(z, gammac_xz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_zyy
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_zx*Der(y, gammac_xy)
+        - mathML: 0.5000000000000*gammacu_zx*Der(y, gammac_xy)
+        - mathML: (-0.5000000000000)*gammacu_zx*Der(x, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_zy*Der(y, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_zy*Der(y, gammac_yy)
+        - mathML: (-0.5000000000000)*gammacu_zy*Der(y, gammac_yy)
+        - mathML: 0.5000000000000*gammacu_zz*Der(y, gammac_zy)
+        - mathML: 0.5000000000000*gammacu_zz*Der(y, gammac_zy)
+        - mathML: (-0.5000000000000)*gammacu_zz*Der(z, gammac_yy)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_zyz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_zx*Der(y, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_zx*Der(z, gammac_xy)
+        - mathML: (-0.5000000000000)*gammacu_zx*Der(x, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_zy*Der(y, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_zy*Der(z, gammac_yy)
+        - mathML: (-0.5000000000000)*gammacu_zy*Der(y, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_zz*Der(y, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_zz*Der(z, gammac_zy)
+        - mathML: (-0.5000000000000)*gammacu_zz*Der(z, gammac_yz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: C_zzz
+      operator:
+        name: Op
+        term:
+        - mathML: 0.5000000000000*gammacu_zx*Der(z, gammac_xz)
+        - mathML: 0.5000000000000*gammacu_zx*Der(z, gammac_xz)
+        - mathML: (-0.5000000000000)*gammacu_zx*Der(x, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_zy*Der(z, gammac_yz)
+        - mathML: 0.5000000000000*gammacu_zy*Der(z, gammac_yz)
+        - mathML: (-0.5000000000000)*gammacu_zy*Der(y, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_zz*Der(z, gammac_zz)
+        - mathML: 0.5000000000000*gammacu_zz*Der(z, gammac_zz)
+        - mathML: (-0.5000000000000)*gammacu_zz*Der(z, gammac_zz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_xxx
+      operator:
+        name: Op
+        term:
+          mathML: gammac_xx*C_xxx+gammac_xy*C_yxx+gammac_xz*C_zxx
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_xxy
+      operator:
+        name: Op
+        term:
+          mathML: gammac_xx*C_xxy+gammac_xy*C_yxy+gammac_xz*C_zxy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_xxz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_xx*C_xxz+gammac_xy*C_yxz+gammac_xz*C_zxz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_xyy
+      operator:
+        name: Op
+        term:
+          mathML: gammac_xx*C_xyy+gammac_xy*C_yyy+gammac_xz*C_zyy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_xyz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_xx*C_xyz+gammac_xy*C_yyz+gammac_xz*C_zyz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_xzz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_xx*C_xzz+gammac_xy*C_yzz+gammac_xz*C_zzz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_yxx
+      operator:
+        name: Op
+        term:
+          mathML: gammac_yx*C_xxx+gammac_yy*C_yxx+gammac_yz*C_zxx
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_yxy
+      operator:
+        name: Op
+        term:
+          mathML: gammac_yx*C_xxy+gammac_yy*C_yxy+gammac_yz*C_zxy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_yxz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_yx*C_xxz+gammac_yy*C_yxz+gammac_yz*C_zxz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_yyy
+      operator:
+        name: Op
+        term:
+          mathML: gammac_yx*C_xyy+gammac_yy*C_yyy+gammac_yz*C_zyy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_yyz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_yx*C_xyz+gammac_yy*C_yyz+gammac_yz*C_zyz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_yzz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_yx*C_xzz+gammac_yy*C_yzz+gammac_yz*C_zzz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_zxx
+      operator:
+        name: Op
+        term:
+          mathML: gammac_zx*C_xxx+gammac_zy*C_yxx+gammac_zz*C_zxx
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_zxy
+      operator:
+        name: Op
+        term:
+          mathML: gammac_zx*C_xxy+gammac_zy*C_yxy+gammac_zz*C_zxy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_zxz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_zx*C_xxz+gammac_zy*C_yxz+gammac_zz*C_zxz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_zyy
+      operator:
+        name: Op
+        term:
+          mathML: gammac_zx*C_xyy+gammac_zy*C_yyy+gammac_zz*C_zyy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_zyz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_zx*C_xyz+gammac_zy*C_yyz+gammac_zz*C_zyz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Cd_zzz
+      operator:
+        name: Op
+        term:
+          mathML: gammac_zx*C_xzz+gammac_zy*C_yzz+gammac_zz*C_zzz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rc_xx
+      operator:
+        name: Op
+        term:
+        - mathML: (-0.5)*gammacu_xx*Der(x, Der(x, gammac_xx))
+        - mathML: (-0.5)*gammacu_xy*Der(x, Der(y, gammac_xx))
+        - mathML: (-0.5)*gammacu_xz*Der(x, Der(z, gammac_xx))
+        - mathML: (-0.5)*gammacu_yx*Der(y, Der(x, gammac_xx))
+        - mathML: (-0.5)*gammacu_yy*Der(y, Der(y, gammac_xx))
+        - mathML: (-0.5)*gammacu_yz*Der(y, Der(z, gammac_xx))
+        - mathML: (-0.5)*gammacu_zx*Der(z, Der(x, gammac_xx))
+        - mathML: (-0.5)*gammacu_zy*Der(z, Der(y, gammac_xx))
+        - mathML: (-0.5)*gammacu_zz*Der(z, Der(z, gammac_xx))
+        - mathML: 0.5*gammac_xx*Der(x, Gam_x)
+        - mathML: 0.5*gammac_yx*Der(x, Gam_y)
+        - mathML: 0.5*gammac_zx*Der(x, Gam_z)
+        - mathML: 0.5*gammac_xx*Der(x, Gam_x)
+        - mathML: 0.5*gammac_yx*Der(x, Gam_y)
+        - mathML: 0.5*gammac_zx*Der(x, Gam_z)
+        - mathML: 0.5*Gam_x*Cd_xxx+0.5*Gam_y*Cd_xxy+0.5*Gam_z*Cd_xxz
+        - mathML: 0.5*Gam_x*Cd_xxx+0.5*Gam_y*Cd_xxy+0.5*Gam_z*Cd_xxz
+        - mathML: gammacu_xx*(C_xxx*Cd_xxx+C_yxx*Cd_xxy+C_zxx*Cd_xxz)+gammacu_xy*(C_xxx*Cd_xxy+C_yxx*Cd_xyy+C_zxx*Cd_xyz)+gammacu_xz*(C_xxx*Cd_xxz+C_yxx*Cd_xyz+C_zxx*Cd_xzz)
+        - mathML: gammacu_yx*(C_xxy*Cd_xxx+C_yxy*Cd_xxy+C_zxy*Cd_xxz)+gammacu_yy*(C_xxy*Cd_xxy+C_yxy*Cd_xyy+C_zxy*Cd_xyz)+gammacu_yz*(C_xxy*Cd_xxz+C_yxy*Cd_xyz+C_zxy*Cd_xzz)
+        - mathML: gammacu_zx*(C_xxz*Cd_xxx+C_yxz*Cd_xxy+C_zxz*Cd_xxz)+gammacu_zy*(C_xxz*Cd_xxy+C_yxz*Cd_xyy+C_zxz*Cd_xyz)+gammacu_zz*(C_xxz*Cd_xxz+C_yxz*Cd_xyz+C_zxz*Cd_xzz)
+        - mathML: gammacu_xx*(C_xxx*Cd_xxx+C_yxx*Cd_xxy+C_zxx*Cd_xxz)+gammacu_xy*(C_xxx*Cd_xxy+C_yxx*Cd_xyy+C_zxx*Cd_xyz)+gammacu_xz*(C_xxx*Cd_xxz+C_yxx*Cd_xyz+C_zxx*Cd_xzz)
+        - mathML: gammacu_yx*(C_xxy*Cd_xxx+C_yxy*Cd_xxy+C_zxy*Cd_xxz)+gammacu_yy*(C_xxy*Cd_xxy+C_yxy*Cd_xyy+C_zxy*Cd_xyz)+gammacu_yz*(C_xxy*Cd_xxz+C_yxy*Cd_xyz+C_zxy*Cd_xzz)
+        - mathML: gammacu_zx*(C_xxz*Cd_xxx+C_yxz*Cd_xxy+C_zxz*Cd_xxz)+gammacu_zy*(C_xxz*Cd_xxy+C_yxz*Cd_xyy+C_zxz*Cd_xyz)+gammacu_zz*(C_xxz*Cd_xxz+C_yxz*Cd_xyz+C_zxz*Cd_xzz)
+        - mathML: gammacu_xx*(C_xxx*Cd_xxx+C_yxx*Cd_yxx+C_zxx*Cd_zxx)+gammacu_xy*(C_xxy*Cd_xxx+C_yxy*Cd_yxx+C_zxy*Cd_zxx)+gammacu_xz*(C_xxz*Cd_xxx+C_yxz*Cd_yxx+C_zxz*Cd_zxx)
+        - mathML: gammacu_yx*(C_xxx*Cd_xxy+C_yxx*Cd_yxy+C_zxx*Cd_zxy)+gammacu_yy*(C_xxy*Cd_xxy+C_yxy*Cd_yxy+C_zxy*Cd_zxy)+gammacu_yz*(C_xxz*Cd_xxy+C_yxz*Cd_yxy+C_zxz*Cd_zxy)
+        - mathML: gammacu_zx*(C_xxx*Cd_xxz+C_yxx*Cd_yxz+C_zxx*Cd_zxz)+gammacu_zy*(C_xxy*Cd_xxz+C_yxy*Cd_yxz+C_zxy*Cd_zxz)+gammacu_zz*(C_xxz*Cd_xxz+C_yxz*Cd_yxz+C_zxz*Cd_zxz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rc_xy
+      operator:
+        name: Op
+        term:
+        - mathML: (-0.5)*gammacu_xx*Der(x, Der(x, gammac_xy))
+        - mathML: (-0.5)*gammacu_xy*Der(x, Der(y, gammac_xy))
+        - mathML: (-0.5)*gammacu_xz*Der(x, Der(z, gammac_xy))
+        - mathML: (-0.5)*gammacu_yx*Der(y, Der(x, gammac_xy))
+        - mathML: (-0.5)*gammacu_yy*Der(y, Der(y, gammac_xy))
+        - mathML: (-0.5)*gammacu_yz*Der(y, Der(z, gammac_xy))
+        - mathML: (-0.5)*gammacu_zx*Der(z, Der(x, gammac_xy))
+        - mathML: (-0.5)*gammacu_zy*Der(z, Der(y, gammac_xy))
+        - mathML: (-0.5)*gammacu_zz*Der(z, Der(z, gammac_xy))
+        - mathML: 0.5*gammac_xx*Der(y, Gam_x)
+        - mathML: 0.5*gammac_yx*Der(y, Gam_y)
+        - mathML: 0.5*gammac_zx*Der(y, Gam_z)
+        - mathML: 0.5*gammac_xy*Der(x, Gam_x)
+        - mathML: 0.5*gammac_yy*Der(x, Gam_y)
+        - mathML: 0.5*gammac_zy*Der(x, Gam_z)
+        - mathML: 0.5*Gam_x*Cd_xxy+0.5*Gam_y*Cd_xyy+0.5*Gam_z*Cd_xyz
+        - mathML: 0.5*Gam_x*Cd_yxx+0.5*Gam_y*Cd_yxy+0.5*Gam_z*Cd_yxz
+        - mathML: gammacu_xx*(C_xxx*Cd_yxx+C_yxx*Cd_yxy+C_zxx*Cd_yxz)+gammacu_xy*(C_xxx*Cd_yxy+C_yxx*Cd_yyy+C_zxx*Cd_yyz)+gammacu_xz*(C_xxx*Cd_yxz+C_yxx*Cd_yyz+C_zxx*Cd_yzz)
+        - mathML: gammacu_yx*(C_xxy*Cd_yxx+C_yxy*Cd_yxy+C_zxy*Cd_yxz)+gammacu_yy*(C_xxy*Cd_yxy+C_yxy*Cd_yyy+C_zxy*Cd_yyz)+gammacu_yz*(C_xxy*Cd_yxz+C_yxy*Cd_yyz+C_zxy*Cd_yzz)
+        - mathML: gammacu_zx*(C_xxz*Cd_yxx+C_yxz*Cd_yxy+C_zxz*Cd_yxz)+gammacu_zy*(C_xxz*Cd_yxy+C_yxz*Cd_yyy+C_zxz*Cd_yyz)+gammacu_zz*(C_xxz*Cd_yxz+C_yxz*Cd_yyz+C_zxz*Cd_yzz)
+        - mathML: gammacu_xx*(C_xxy*Cd_xxx+C_yxy*Cd_xxy+C_zxy*Cd_xxz)+gammacu_xy*(C_xxy*Cd_xxy+C_yxy*Cd_xyy+C_zxy*Cd_xyz)+gammacu_xz*(C_xxy*Cd_xxz+C_yxy*Cd_xyz+C_zxy*Cd_xzz)
+        - mathML: gammacu_yx*(C_xyy*Cd_xxx+C_yyy*Cd_xxy+C_zyy*Cd_xxz)+gammacu_yy*(C_xyy*Cd_xxy+C_yyy*Cd_xyy+C_zyy*Cd_xyz)+gammacu_yz*(C_xyy*Cd_xxz+C_yyy*Cd_xyz+C_zyy*Cd_xzz)
+        - mathML: gammacu_zx*(C_xyz*Cd_xxx+C_yyz*Cd_xxy+C_zyz*Cd_xxz)+gammacu_zy*(C_xyz*Cd_xxy+C_yyz*Cd_xyy+C_zyz*Cd_xyz)+gammacu_zz*(C_xyz*Cd_xxz+C_yyz*Cd_xyz+C_zyz*Cd_xzz)
+        - mathML: gammacu_xx*(C_xxx*Cd_xxy+C_yxx*Cd_yxy+C_zxx*Cd_zxy)+gammacu_xy*(C_xxy*Cd_xxy+C_yxy*Cd_yxy+C_zxy*Cd_zxy)+gammacu_xz*(C_xxz*Cd_xxy+C_yxz*Cd_yxy+C_zxz*Cd_zxy)
+        - mathML: gammacu_yx*(C_xxx*Cd_xyy+C_yxx*Cd_yyy+C_zxx*Cd_zyy)+gammacu_yy*(C_xxy*Cd_xyy+C_yxy*Cd_yyy+C_zxy*Cd_zyy)+gammacu_yz*(C_xxz*Cd_xyy+C_yxz*Cd_yyy+C_zxz*Cd_zyy)
+        - mathML: gammacu_zx*(C_xxx*Cd_xyz+C_yxx*Cd_yyz+C_zxx*Cd_zyz)+gammacu_zy*(C_xxy*Cd_xyz+C_yxy*Cd_yyz+C_zxy*Cd_zyz)+gammacu_zz*(C_xxz*Cd_xyz+C_yxz*Cd_yyz+C_zxz*Cd_zyz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rc_xz
+      operator:
+        name: Op
+        term:
+        - mathML: (-0.5)*gammacu_xx*Der(x, Der(x, gammac_xz))
+        - mathML: (-0.5)*gammacu_xy*Der(x, Der(y, gammac_xz))
+        - mathML: (-0.5)*gammacu_xz*Der(x, Der(z, gammac_xz))
+        - mathML: (-0.5)*gammacu_yx*Der(y, Der(x, gammac_xz))
+        - mathML: (-0.5)*gammacu_yy*Der(y, Der(y, gammac_xz))
+        - mathML: (-0.5)*gammacu_yz*Der(y, Der(z, gammac_xz))
+        - mathML: (-0.5)*gammacu_zx*Der(z, Der(x, gammac_xz))
+        - mathML: (-0.5)*gammacu_zy*Der(z, Der(y, gammac_xz))
+        - mathML: (-0.5)*gammacu_zz*Der(z, Der(z, gammac_xz))
+        - mathML: 0.5*gammac_xx*Der(z, Gam_x)
+        - mathML: 0.5*gammac_yx*Der(z, Gam_y)
+        - mathML: 0.5*gammac_zx*Der(z, Gam_z)
+        - mathML: 0.5*gammac_xz*Der(x, Gam_x)
+        - mathML: 0.5*gammac_yz*Der(x, Gam_y)
+        - mathML: 0.5*gammac_zz*Der(x, Gam_z)
+        - mathML: 0.5*Gam_x*Cd_xxz+0.5*Gam_y*Cd_xyz+0.5*Gam_z*Cd_xzz
+        - mathML: 0.5*Gam_x*Cd_zxx+0.5*Gam_y*Cd_zxy+0.5*Gam_z*Cd_zxz
+        - mathML: gammacu_xx*(C_xxx*Cd_zxx+C_yxx*Cd_zxy+C_zxx*Cd_zxz)+gammacu_xy*(C_xxx*Cd_zxy+C_yxx*Cd_zyy+C_zxx*Cd_zyz)+gammacu_xz*(C_xxx*Cd_zxz+C_yxx*Cd_zyz+C_zxx*Cd_zzz)
+        - mathML: gammacu_yx*(C_xxy*Cd_zxx+C_yxy*Cd_zxy+C_zxy*Cd_zxz)+gammacu_yy*(C_xxy*Cd_zxy+C_yxy*Cd_zyy+C_zxy*Cd_zyz)+gammacu_yz*(C_xxy*Cd_zxz+C_yxy*Cd_zyz+C_zxy*Cd_zzz)
+        - mathML: gammacu_zx*(C_xxz*Cd_zxx+C_yxz*Cd_zxy+C_zxz*Cd_zxz)+gammacu_zy*(C_xxz*Cd_zxy+C_yxz*Cd_zyy+C_zxz*Cd_zyz)+gammacu_zz*(C_xxz*Cd_zxz+C_yxz*Cd_zyz+C_zxz*Cd_zzz)
+        - mathML: gammacu_xx*(C_xxz*Cd_xxx+C_yxz*Cd_xxy+C_zxz*Cd_xxz)+gammacu_xy*(C_xxz*Cd_xxy+C_yxz*Cd_xyy+C_zxz*Cd_xyz)+gammacu_xz*(C_xxz*Cd_xxz+C_yxz*Cd_xyz+C_zxz*Cd_xzz)
+        - mathML: gammacu_yx*(C_xyz*Cd_xxx+C_yyz*Cd_xxy+C_zyz*Cd_xxz)+gammacu_yy*(C_xyz*Cd_xxy+C_yyz*Cd_xyy+C_zyz*Cd_xyz)+gammacu_yz*(C_xyz*Cd_xxz+C_yyz*Cd_xyz+C_zyz*Cd_xzz)
+        - mathML: gammacu_zx*(C_xzz*Cd_xxx+C_yzz*Cd_xxy+C_zzz*Cd_xxz)+gammacu_zy*(C_xzz*Cd_xxy+C_yzz*Cd_xyy+C_zzz*Cd_xyz)+gammacu_zz*(C_xzz*Cd_xxz+C_yzz*Cd_xyz+C_zzz*Cd_xzz)
+        - mathML: gammacu_xx*(C_xxx*Cd_xxz+C_yxx*Cd_yxz+C_zxx*Cd_zxz)+gammacu_xy*(C_xxy*Cd_xxz+C_yxy*Cd_yxz+C_zxy*Cd_zxz)+gammacu_xz*(C_xxz*Cd_xxz+C_yxz*Cd_yxz+C_zxz*Cd_zxz)
+        - mathML: gammacu_yx*(C_xxx*Cd_xyz+C_yxx*Cd_yyz+C_zxx*Cd_zyz)+gammacu_yy*(C_xxy*Cd_xyz+C_yxy*Cd_yyz+C_zxy*Cd_zyz)+gammacu_yz*(C_xxz*Cd_xyz+C_yxz*Cd_yyz+C_zxz*Cd_zyz)
+        - mathML: gammacu_zx*(C_xxx*Cd_xzz+C_yxx*Cd_yzz+C_zxx*Cd_zzz)+gammacu_zy*(C_xxy*Cd_xzz+C_yxy*Cd_yzz+C_zxy*Cd_zzz)+gammacu_zz*(C_xxz*Cd_xzz+C_yxz*Cd_yzz+C_zxz*Cd_zzz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rc_yy
+      operator:
+        name: Op
+        term:
+        - mathML: (-0.5)*gammacu_xx*Der(x, Der(x, gammac_yy))
+        - mathML: (-0.5)*gammacu_xy*Der(x, Der(y, gammac_yy))
+        - mathML: (-0.5)*gammacu_xz*Der(x, Der(z, gammac_yy))
+        - mathML: (-0.5)*gammacu_yx*Der(y, Der(x, gammac_yy))
+        - mathML: (-0.5)*gammacu_yy*Der(y, Der(y, gammac_yy))
+        - mathML: (-0.5)*gammacu_yz*Der(y, Der(z, gammac_yy))
+        - mathML: (-0.5)*gammacu_zx*Der(z, Der(x, gammac_yy))
+        - mathML: (-0.5)*gammacu_zy*Der(z, Der(y, gammac_yy))
+        - mathML: (-0.5)*gammacu_zz*Der(z, Der(z, gammac_yy))
+        - mathML: 0.5*gammac_xy*Der(y, Gam_x)
+        - mathML: 0.5*gammac_yy*Der(y, Gam_y)
+        - mathML: 0.5*gammac_zy*Der(y, Gam_z)
+        - mathML: 0.5*gammac_xy*Der(y, Gam_x)
+        - mathML: 0.5*gammac_yy*Der(y, Gam_y)
+        - mathML: 0.5*gammac_zy*Der(y, Gam_z)
+        - mathML: 0.5*Gam_x*Cd_yxy+0.5*Gam_y*Cd_yyy+0.5*Gam_z*Cd_yyz
+        - mathML: 0.5*Gam_x*Cd_yxy+0.5*Gam_y*Cd_yyy+0.5*Gam_z*Cd_yyz
+        - mathML: gammacu_xx*(C_xxy*Cd_yxx+C_yxy*Cd_yxy+C_zxy*Cd_yxz)+gammacu_xy*(C_xxy*Cd_yxy+C_yxy*Cd_yyy+C_zxy*Cd_yyz)+gammacu_xz*(C_xxy*Cd_yxz+C_yxy*Cd_yyz+C_zxy*Cd_yzz)
+        - mathML: gammacu_yx*(C_xyy*Cd_yxx+C_yyy*Cd_yxy+C_zyy*Cd_yxz)+gammacu_yy*(C_xyy*Cd_yxy+C_yyy*Cd_yyy+C_zyy*Cd_yyz)+gammacu_yz*(C_xyy*Cd_yxz+C_yyy*Cd_yyz+C_zyy*Cd_yzz)
+        - mathML: gammacu_zx*(C_xyz*Cd_yxx+C_yyz*Cd_yxy+C_zyz*Cd_yxz)+gammacu_zy*(C_xyz*Cd_yxy+C_yyz*Cd_yyy+C_zyz*Cd_yyz)+gammacu_zz*(C_xyz*Cd_yxz+C_yyz*Cd_yyz+C_zyz*Cd_yzz)
+        - mathML: gammacu_xx*(C_xxy*Cd_yxx+C_yxy*Cd_yxy+C_zxy*Cd_yxz)+gammacu_xy*(C_xxy*Cd_yxy+C_yxy*Cd_yyy+C_zxy*Cd_yyz)+gammacu_xz*(C_xxy*Cd_yxz+C_yxy*Cd_yyz+C_zxy*Cd_yzz)
+        - mathML: gammacu_yx*(C_xyy*Cd_yxx+C_yyy*Cd_yxy+C_zyy*Cd_yxz)+gammacu_yy*(C_xyy*Cd_yxy+C_yyy*Cd_yyy+C_zyy*Cd_yyz)+gammacu_yz*(C_xyy*Cd_yxz+C_yyy*Cd_yyz+C_zyy*Cd_yzz)
+        - mathML: gammacu_zx*(C_xyz*Cd_yxx+C_yyz*Cd_yxy+C_zyz*Cd_yxz)+gammacu_zy*(C_xyz*Cd_yxy+C_yyz*Cd_yyy+C_zyz*Cd_yyz)+gammacu_zz*(C_xyz*Cd_yxz+C_yyz*Cd_yyz+C_zyz*Cd_yzz)
+        - mathML: gammacu_xx*(C_xxy*Cd_xxy+C_yxy*Cd_yxy+C_zxy*Cd_zxy)+gammacu_xy*(C_xyy*Cd_xxy+C_yyy*Cd_yxy+C_zyy*Cd_zxy)+gammacu_xz*(C_xyz*Cd_xxy+C_yyz*Cd_yxy+C_zyz*Cd_zxy)
+        - mathML: gammacu_yx*(C_xxy*Cd_xyy+C_yxy*Cd_yyy+C_zxy*Cd_zyy)+gammacu_yy*(C_xyy*Cd_xyy+C_yyy*Cd_yyy+C_zyy*Cd_zyy)+gammacu_yz*(C_xyz*Cd_xyy+C_yyz*Cd_yyy+C_zyz*Cd_zyy)
+        - mathML: gammacu_zx*(C_xxy*Cd_xyz+C_yxy*Cd_yyz+C_zxy*Cd_zyz)+gammacu_zy*(C_xyy*Cd_xyz+C_yyy*Cd_yyz+C_zyy*Cd_zyz)+gammacu_zz*(C_xyz*Cd_xyz+C_yyz*Cd_yyz+C_zyz*Cd_zyz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rc_yz
+      operator:
+        name: Op
+        term:
+        - mathML: (-0.5)*gammacu_xx*Der(x, Der(x, gammac_yz))
+        - mathML: (-0.5)*gammacu_xy*Der(x, Der(y, gammac_yz))
+        - mathML: (-0.5)*gammacu_xz*Der(x, Der(z, gammac_yz))
+        - mathML: (-0.5)*gammacu_yx*Der(y, Der(x, gammac_yz))
+        - mathML: (-0.5)*gammacu_yy*Der(y, Der(y, gammac_yz))
+        - mathML: (-0.5)*gammacu_yz*Der(y, Der(z, gammac_yz))
+        - mathML: (-0.5)*gammacu_zx*Der(z, Der(x, gammac_yz))
+        - mathML: (-0.5)*gammacu_zy*Der(z, Der(y, gammac_yz))
+        - mathML: (-0.5)*gammacu_zz*Der(z, Der(z, gammac_yz))
+        - mathML: 0.5*gammac_xy*Der(z, Gam_x)
+        - mathML: 0.5*gammac_yy*Der(z, Gam_y)
+        - mathML: 0.5*gammac_zy*Der(z, Gam_z)
+        - mathML: 0.5*gammac_xz*Der(y, Gam_x)
+        - mathML: 0.5*gammac_yz*Der(y, Gam_y)
+        - mathML: 0.5*gammac_zz*Der(y, Gam_z)
+        - mathML: 0.5*Gam_x*Cd_yxz+0.5*Gam_y*Cd_yyz+0.5*Gam_z*Cd_yzz
+        - mathML: 0.5*Gam_x*Cd_zxy+0.5*Gam_y*Cd_zyy+0.5*Gam_z*Cd_zyz
+        - mathML: gammacu_xx*(C_xxy*Cd_zxx+C_yxy*Cd_zxy+C_zxy*Cd_zxz)+gammacu_xy*(C_xxy*Cd_zxy+C_yxy*Cd_zyy+C_zxy*Cd_zyz)+gammacu_xz*(C_xxy*Cd_zxz+C_yxy*Cd_zyz+C_zxy*Cd_zzz)
+        - mathML: gammacu_yx*(C_xyy*Cd_zxx+C_yyy*Cd_zxy+C_zyy*Cd_zxz)+gammacu_yy*(C_xyy*Cd_zxy+C_yyy*Cd_zyy+C_zyy*Cd_zyz)+gammacu_yz*(C_xyy*Cd_zxz+C_yyy*Cd_zyz+C_zyy*Cd_zzz)
+        - mathML: gammacu_zx*(C_xyz*Cd_zxx+C_yyz*Cd_zxy+C_zyz*Cd_zxz)+gammacu_zy*(C_xyz*Cd_zxy+C_yyz*Cd_zyy+C_zyz*Cd_zyz)+gammacu_zz*(C_xyz*Cd_zxz+C_yyz*Cd_zyz+C_zyz*Cd_zzz)
+        - mathML: gammacu_xx*(C_xxz*Cd_yxx+C_yxz*Cd_yxy+C_zxz*Cd_yxz)+gammacu_xy*(C_xxz*Cd_yxy+C_yxz*Cd_yyy+C_zxz*Cd_yyz)+gammacu_xz*(C_xxz*Cd_yxz+C_yxz*Cd_yyz+C_zxz*Cd_yzz)
+        - mathML: gammacu_yx*(C_xyz*Cd_yxx+C_yyz*Cd_yxy+C_zyz*Cd_yxz)+gammacu_yy*(C_xyz*Cd_yxy+C_yyz*Cd_yyy+C_zyz*Cd_yyz)+gammacu_yz*(C_xyz*Cd_yxz+C_yyz*Cd_yyz+C_zyz*Cd_yzz)
+        - mathML: gammacu_zx*(C_xzz*Cd_yxx+C_yzz*Cd_yxy+C_zzz*Cd_yxz)+gammacu_zy*(C_xzz*Cd_yxy+C_yzz*Cd_yyy+C_zzz*Cd_yyz)+gammacu_zz*(C_xzz*Cd_yxz+C_yzz*Cd_yyz+C_zzz*Cd_yzz)
+        - mathML: gammacu_xx*(C_xxy*Cd_xxz+C_yxy*Cd_yxz+C_zxy*Cd_zxz)+gammacu_xy*(C_xyy*Cd_xxz+C_yyy*Cd_yxz+C_zyy*Cd_zxz)+gammacu_xz*(C_xyz*Cd_xxz+C_yyz*Cd_yxz+C_zyz*Cd_zxz)
+        - mathML: gammacu_yx*(C_xxy*Cd_xyz+C_yxy*Cd_yyz+C_zxy*Cd_zyz)+gammacu_yy*(C_xyy*Cd_xyz+C_yyy*Cd_yyz+C_zyy*Cd_zyz)+gammacu_yz*(C_xyz*Cd_xyz+C_yyz*Cd_yyz+C_zyz*Cd_zyz)
+        - mathML: gammacu_zx*(C_xxy*Cd_xzz+C_yxy*Cd_yzz+C_zxy*Cd_zzz)+gammacu_zy*(C_xyy*Cd_xzz+C_yyy*Cd_yzz+C_zyy*Cd_zzz)+gammacu_zz*(C_xyz*Cd_xzz+C_yyz*Cd_yzz+C_zyz*Cd_zzz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rc_zz
+      operator:
+        name: Op
+        term:
+        - mathML: (-0.5)*gammacu_xx*Der(x, Der(x, gammac_zz))
+        - mathML: (-0.5)*gammacu_xy*Der(x, Der(y, gammac_zz))
+        - mathML: (-0.5)*gammacu_xz*Der(x, Der(z, gammac_zz))
+        - mathML: (-0.5)*gammacu_yx*Der(y, Der(x, gammac_zz))
+        - mathML: (-0.5)*gammacu_yy*Der(y, Der(y, gammac_zz))
+        - mathML: (-0.5)*gammacu_yz*Der(y, Der(z, gammac_zz))
+        - mathML: (-0.5)*gammacu_zx*Der(z, Der(x, gammac_zz))
+        - mathML: (-0.5)*gammacu_zy*Der(z, Der(y, gammac_zz))
+        - mathML: (-0.5)*gammacu_zz*Der(z, Der(z, gammac_zz))
+        - mathML: 0.5*gammac_xz*Der(z, Gam_x)
+        - mathML: 0.5*gammac_yz*Der(z, Gam_y)
+        - mathML: 0.5*gammac_zz*Der(z, Gam_z)
+        - mathML: 0.5*gammac_xz*Der(z, Gam_x)
+        - mathML: 0.5*gammac_yz*Der(z, Gam_y)
+        - mathML: 0.5*gammac_zz*Der(z, Gam_z)
+        - mathML: 0.5*Gam_x*Cd_zxz+0.5*Gam_y*Cd_zyz+0.5*Gam_z*Cd_zzz
+        - mathML: 0.5*Gam_x*Cd_zxz+0.5*Gam_y*Cd_zyz+0.5*Gam_z*Cd_zzz
+        - mathML: gammacu_xx*(C_xxz*Cd_zxx+C_yxz*Cd_zxy+C_zxz*Cd_zxz)+gammacu_xy*(C_xxz*Cd_zxy+C_yxz*Cd_zyy+C_zxz*Cd_zyz)+gammacu_xz*(C_xxz*Cd_zxz+C_yxz*Cd_zyz+C_zxz*Cd_zzz)
+        - mathML: gammacu_yx*(C_xyz*Cd_zxx+C_yyz*Cd_zxy+C_zyz*Cd_zxz)+gammacu_yy*(C_xyz*Cd_zxy+C_yyz*Cd_zyy+C_zyz*Cd_zyz)+gammacu_yz*(C_xyz*Cd_zxz+C_yyz*Cd_zyz+C_zyz*Cd_zzz)
+        - mathML: gammacu_zx*(C_xzz*Cd_zxx+C_yzz*Cd_zxy+C_zzz*Cd_zxz)+gammacu_zy*(C_xzz*Cd_zxy+C_yzz*Cd_zyy+C_zzz*Cd_zyz)+gammacu_zz*(C_xzz*Cd_zxz+C_yzz*Cd_zyz+C_zzz*Cd_zzz)
+        - mathML: gammacu_xx*(C_xxz*Cd_zxx+C_yxz*Cd_zxy+C_zxz*Cd_zxz)+gammacu_xy*(C_xxz*Cd_zxy+C_yxz*Cd_zyy+C_zxz*Cd_zyz)+gammacu_xz*(C_xxz*Cd_zxz+C_yxz*Cd_zyz+C_zxz*Cd_zzz)
+        - mathML: gammacu_yx*(C_xyz*Cd_zxx+C_yyz*Cd_zxy+C_zyz*Cd_zxz)+gammacu_yy*(C_xyz*Cd_zxy+C_yyz*Cd_zyy+C_zyz*Cd_zyz)+gammacu_yz*(C_xyz*Cd_zxz+C_yyz*Cd_zyz+C_zyz*Cd_zzz)
+        - mathML: gammacu_zx*(C_xzz*Cd_zxx+C_yzz*Cd_zxy+C_zzz*Cd_zxz)+gammacu_zy*(C_xzz*Cd_zxy+C_yzz*Cd_zyy+C_zzz*Cd_zyz)+gammacu_zz*(C_xzz*Cd_zxz+C_yzz*Cd_zyz+C_zzz*Cd_zzz)
+        - mathML: gammacu_xx*(C_xxz*Cd_xxz+C_yxz*Cd_yxz+C_zxz*Cd_zxz)+gammacu_xy*(C_xyz*Cd_xxz+C_yyz*Cd_yxz+C_zyz*Cd_zxz)+gammacu_xz*(C_xzz*Cd_xxz+C_yzz*Cd_yxz+C_zzz*Cd_zxz)
+        - mathML: gammacu_yx*(C_xxz*Cd_xyz+C_yxz*Cd_yyz+C_zxz*Cd_zyz)+gammacu_yy*(C_xyz*Cd_xyz+C_yyz*Cd_yyz+C_zyz*Cd_zyz)+gammacu_yz*(C_xzz*Cd_xyz+C_yzz*Cd_yyz+C_zzz*Cd_zyz)
+        - mathML: gammacu_zx*(C_xxz*Cd_xzz+C_yxz*Cd_yzz+C_zxz*Cd_zzz)+gammacu_zy*(C_xyz*Cd_xzz+C_yyz*Cd_yzz+C_zyz*Cd_zzz)+gammacu_zz*(C_xzz*Cd_xzz+C_yzz*Cd_yzz+C_zzz*Cd_zzz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rp_xx
+      operator:
+        name: Op
+        term:
+        - mathML: (-2)*Der(x, Der(x, Phi))
+        - mathML: 2*C_xxx*Der(x, Phi)
+        - mathML: 2*C_yxx*Der(y, Phi)
+        - mathML: 2*C_zxx*Der(z, Phi)
+        - mathML: (-2)*gammac_xx*gammacu_xx*Der(x, Der(x, Phi))
+        - mathML: (-2)*gammac_xx*gammacu_xy*Der(y, Der(x, Phi))
+        - mathML: (-2)*gammac_xx*gammacu_xz*Der(z, Der(x, Phi))
+        - mathML: (-2)*gammac_xx*gammacu_yx*Der(x, Der(y, Phi))
+        - mathML: (-2)*gammac_xx*gammacu_yy*Der(y, Der(y, Phi))
+        - mathML: (-2)*gammac_xx*gammacu_yz*Der(z, Der(y, Phi))
+        - mathML: (-2)*gammac_xx*gammacu_zx*Der(x, Der(z, Phi))
+        - mathML: (-2)*gammac_xx*gammacu_zy*Der(y, Der(z, Phi))
+        - mathML: (-2)*gammac_xx*gammacu_zz*Der(z, Der(z, Phi))
+        - mathML: 2*gammac_xx*gammacu_xx*C_xxx*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_xx*C_yxx*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_xx*C_zxx*Der(z, Phi)
+        - mathML: 2*gammac_xx*gammacu_xy*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_xy*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_xy*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_xx*gammacu_xz*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_xz*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_xz*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_xx*gammacu_yx*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_yx*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_yx*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_xx*gammacu_yy*C_xyy*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_yy*C_yyy*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_yy*C_zyy*Der(z, Phi)
+        - mathML: 2*gammac_xx*gammacu_yz*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_yz*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_yz*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_xx*gammacu_zx*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_zx*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_zx*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_xx*gammacu_zy*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_zy*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_zy*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_xx*gammacu_zz*C_xzz*Der(x, Phi)
+        - mathML: 2*gammac_xx*gammacu_zz*C_yzz*Der(y, Phi)
+        - mathML: 2*gammac_xx*gammacu_zz*C_zzz*Der(z, Phi)
+        - mathML: 4*Der(x, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_xx*Der(x, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_xy*Der(x, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_xz*Der(x, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_yx*Der(y, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_yy*Der(y, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_yz*Der(y, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_zx*Der(z, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_zy*Der(z, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xx*gammacu_zz*Der(z, Phi)*Der(z, Phi)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rp_xy
+      operator:
+        name: Op
+        term:
+        - mathML: (-2)*Der(x, Der(y, Phi))
+        - mathML: 2*C_xxy*Der(x, Phi)
+        - mathML: 2*C_yxy*Der(y, Phi)
+        - mathML: 2*C_zxy*Der(z, Phi)
+        - mathML: (-2)*gammac_xy*gammacu_xx*Der(x, Der(x, Phi))
+        - mathML: (-2)*gammac_xy*gammacu_xy*Der(y, Der(x, Phi))
+        - mathML: (-2)*gammac_xy*gammacu_xz*Der(z, Der(x, Phi))
+        - mathML: (-2)*gammac_xy*gammacu_yx*Der(x, Der(y, Phi))
+        - mathML: (-2)*gammac_xy*gammacu_yy*Der(y, Der(y, Phi))
+        - mathML: (-2)*gammac_xy*gammacu_yz*Der(z, Der(y, Phi))
+        - mathML: (-2)*gammac_xy*gammacu_zx*Der(x, Der(z, Phi))
+        - mathML: (-2)*gammac_xy*gammacu_zy*Der(y, Der(z, Phi))
+        - mathML: (-2)*gammac_xy*gammacu_zz*Der(z, Der(z, Phi))
+        - mathML: 2*gammac_xy*gammacu_xx*C_xxx*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_xx*C_yxx*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_xx*C_zxx*Der(z, Phi)
+        - mathML: 2*gammac_xy*gammacu_xy*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_xy*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_xy*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_xy*gammacu_xz*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_xz*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_xz*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_xy*gammacu_yx*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_yx*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_yx*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_xy*gammacu_yy*C_xyy*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_yy*C_yyy*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_yy*C_zyy*Der(z, Phi)
+        - mathML: 2*gammac_xy*gammacu_yz*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_yz*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_yz*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_xy*gammacu_zx*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_zx*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_zx*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_xy*gammacu_zy*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_zy*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_zy*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_xy*gammacu_zz*C_xzz*Der(x, Phi)
+        - mathML: 2*gammac_xy*gammacu_zz*C_yzz*Der(y, Phi)
+        - mathML: 2*gammac_xy*gammacu_zz*C_zzz*Der(z, Phi)
+        - mathML: 4*Der(x, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_xx*Der(x, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_xy*Der(x, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_xz*Der(x, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_yx*Der(y, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_yy*Der(y, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_yz*Der(y, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_zx*Der(z, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_zy*Der(z, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xy*gammacu_zz*Der(z, Phi)*Der(z, Phi)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rp_xz
+      operator:
+        name: Op
+        term:
+        - mathML: (-2)*Der(x, Der(z, Phi))
+        - mathML: 2*C_xxz*Der(x, Phi)
+        - mathML: 2*C_yxz*Der(y, Phi)
+        - mathML: 2*C_zxz*Der(z, Phi)
+        - mathML: (-2)*gammac_xz*gammacu_xx*Der(x, Der(x, Phi))
+        - mathML: (-2)*gammac_xz*gammacu_xy*Der(y, Der(x, Phi))
+        - mathML: (-2)*gammac_xz*gammacu_xz*Der(z, Der(x, Phi))
+        - mathML: (-2)*gammac_xz*gammacu_yx*Der(x, Der(y, Phi))
+        - mathML: (-2)*gammac_xz*gammacu_yy*Der(y, Der(y, Phi))
+        - mathML: (-2)*gammac_xz*gammacu_yz*Der(z, Der(y, Phi))
+        - mathML: (-2)*gammac_xz*gammacu_zx*Der(x, Der(z, Phi))
+        - mathML: (-2)*gammac_xz*gammacu_zy*Der(y, Der(z, Phi))
+        - mathML: (-2)*gammac_xz*gammacu_zz*Der(z, Der(z, Phi))
+        - mathML: 2*gammac_xz*gammacu_xx*C_xxx*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_xx*C_yxx*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_xx*C_zxx*Der(z, Phi)
+        - mathML: 2*gammac_xz*gammacu_xy*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_xy*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_xy*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_xz*gammacu_xz*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_xz*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_xz*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_xz*gammacu_yx*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_yx*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_yx*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_xz*gammacu_yy*C_xyy*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_yy*C_yyy*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_yy*C_zyy*Der(z, Phi)
+        - mathML: 2*gammac_xz*gammacu_yz*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_yz*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_yz*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_xz*gammacu_zx*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_zx*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_zx*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_xz*gammacu_zy*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_zy*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_zy*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_xz*gammacu_zz*C_xzz*Der(x, Phi)
+        - mathML: 2*gammac_xz*gammacu_zz*C_yzz*Der(y, Phi)
+        - mathML: 2*gammac_xz*gammacu_zz*C_zzz*Der(z, Phi)
+        - mathML: 4*Der(x, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_xx*Der(x, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_xy*Der(x, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_xz*Der(x, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_yx*Der(y, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_yy*Der(y, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_yz*Der(y, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_zx*Der(z, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_zy*Der(z, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_xz*gammacu_zz*Der(z, Phi)*Der(z, Phi)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rp_yy
+      operator:
+        name: Op
+        term:
+        - mathML: (-2)*Der(y, Der(y, Phi))
+        - mathML: 2*C_xyy*Der(x, Phi)
+        - mathML: 2*C_yyy*Der(y, Phi)
+        - mathML: 2*C_zyy*Der(z, Phi)
+        - mathML: (-2)*gammac_yy*gammacu_xx*Der(x, Der(x, Phi))
+        - mathML: (-2)*gammac_yy*gammacu_xy*Der(y, Der(x, Phi))
+        - mathML: (-2)*gammac_yy*gammacu_xz*Der(z, Der(x, Phi))
+        - mathML: (-2)*gammac_yy*gammacu_yx*Der(x, Der(y, Phi))
+        - mathML: (-2)*gammac_yy*gammacu_yy*Der(y, Der(y, Phi))
+        - mathML: (-2)*gammac_yy*gammacu_yz*Der(z, Der(y, Phi))
+        - mathML: (-2)*gammac_yy*gammacu_zx*Der(x, Der(z, Phi))
+        - mathML: (-2)*gammac_yy*gammacu_zy*Der(y, Der(z, Phi))
+        - mathML: (-2)*gammac_yy*gammacu_zz*Der(z, Der(z, Phi))
+        - mathML: 2*gammac_yy*gammacu_xx*C_xxx*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_xx*C_yxx*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_xx*C_zxx*Der(z, Phi)
+        - mathML: 2*gammac_yy*gammacu_xy*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_xy*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_xy*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_yy*gammacu_xz*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_xz*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_xz*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_yy*gammacu_yx*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_yx*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_yx*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_yy*gammacu_yy*C_xyy*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_yy*C_yyy*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_yy*C_zyy*Der(z, Phi)
+        - mathML: 2*gammac_yy*gammacu_yz*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_yz*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_yz*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_yy*gammacu_zx*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_zx*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_zx*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_yy*gammacu_zy*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_zy*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_zy*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_yy*gammacu_zz*C_xzz*Der(x, Phi)
+        - mathML: 2*gammac_yy*gammacu_zz*C_yzz*Der(y, Phi)
+        - mathML: 2*gammac_yy*gammacu_zz*C_zzz*Der(z, Phi)
+        - mathML: 4*Der(y, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_xx*Der(x, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_xy*Der(x, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_xz*Der(x, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_yx*Der(y, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_yy*Der(y, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_yz*Der(y, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_zx*Der(z, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_zy*Der(z, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_yy*gammacu_zz*Der(z, Phi)*Der(z, Phi)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rp_yz
+      operator:
+        name: Op
+        term:
+        - mathML: (-2)*Der(y, Der(z, Phi))
+        - mathML: 2*C_xyz*Der(x, Phi)
+        - mathML: 2*C_yyz*Der(y, Phi)
+        - mathML: 2*C_zyz*Der(z, Phi)
+        - mathML: (-2)*gammac_yz*gammacu_xx*Der(x, Der(x, Phi))
+        - mathML: (-2)*gammac_yz*gammacu_xy*Der(y, Der(x, Phi))
+        - mathML: (-2)*gammac_yz*gammacu_xz*Der(z, Der(x, Phi))
+        - mathML: (-2)*gammac_yz*gammacu_yx*Der(x, Der(y, Phi))
+        - mathML: (-2)*gammac_yz*gammacu_yy*Der(y, Der(y, Phi))
+        - mathML: (-2)*gammac_yz*gammacu_yz*Der(z, Der(y, Phi))
+        - mathML: (-2)*gammac_yz*gammacu_zx*Der(x, Der(z, Phi))
+        - mathML: (-2)*gammac_yz*gammacu_zy*Der(y, Der(z, Phi))
+        - mathML: (-2)*gammac_yz*gammacu_zz*Der(z, Der(z, Phi))
+        - mathML: 2*gammac_yz*gammacu_xx*C_xxx*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_xx*C_yxx*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_xx*C_zxx*Der(z, Phi)
+        - mathML: 2*gammac_yz*gammacu_xy*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_xy*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_xy*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_yz*gammacu_xz*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_xz*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_xz*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_yz*gammacu_yx*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_yx*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_yx*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_yz*gammacu_yy*C_xyy*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_yy*C_yyy*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_yy*C_zyy*Der(z, Phi)
+        - mathML: 2*gammac_yz*gammacu_yz*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_yz*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_yz*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_yz*gammacu_zx*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_zx*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_zx*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_yz*gammacu_zy*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_zy*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_zy*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_yz*gammacu_zz*C_xzz*Der(x, Phi)
+        - mathML: 2*gammac_yz*gammacu_zz*C_yzz*Der(y, Phi)
+        - mathML: 2*gammac_yz*gammacu_zz*C_zzz*Der(z, Phi)
+        - mathML: 4*Der(y, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_xx*Der(x, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_xy*Der(x, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_xz*Der(x, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_yx*Der(y, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_yy*Der(y, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_yz*Der(y, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_zx*Der(z, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_zy*Der(z, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_yz*gammacu_zz*Der(z, Phi)*Der(z, Phi)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Rp_zz
+      operator:
+        name: Op
+        term:
+        - mathML: (-2)*Der(z, Der(z, Phi))
+        - mathML: 2*C_xzz*Der(x, Phi)
+        - mathML: 2*C_yzz*Der(y, Phi)
+        - mathML: 2*C_zzz*Der(z, Phi)
+        - mathML: (-2)*gammac_zz*gammacu_xx*Der(x, Der(x, Phi))
+        - mathML: (-2)*gammac_zz*gammacu_xy*Der(y, Der(x, Phi))
+        - mathML: (-2)*gammac_zz*gammacu_xz*Der(z, Der(x, Phi))
+        - mathML: (-2)*gammac_zz*gammacu_yx*Der(x, Der(y, Phi))
+        - mathML: (-2)*gammac_zz*gammacu_yy*Der(y, Der(y, Phi))
+        - mathML: (-2)*gammac_zz*gammacu_yz*Der(z, Der(y, Phi))
+        - mathML: (-2)*gammac_zz*gammacu_zx*Der(x, Der(z, Phi))
+        - mathML: (-2)*gammac_zz*gammacu_zy*Der(y, Der(z, Phi))
+        - mathML: (-2)*gammac_zz*gammacu_zz*Der(z, Der(z, Phi))
+        - mathML: 2*gammac_zz*gammacu_xx*C_xxx*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_xx*C_yxx*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_xx*C_zxx*Der(z, Phi)
+        - mathML: 2*gammac_zz*gammacu_xy*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_xy*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_xy*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_zz*gammacu_xz*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_xz*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_xz*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_zz*gammacu_yx*C_xxy*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_yx*C_yxy*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_yx*C_zxy*Der(z, Phi)
+        - mathML: 2*gammac_zz*gammacu_yy*C_xyy*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_yy*C_yyy*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_yy*C_zyy*Der(z, Phi)
+        - mathML: 2*gammac_zz*gammacu_yz*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_yz*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_yz*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_zz*gammacu_zx*C_xxz*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_zx*C_yxz*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_zx*C_zxz*Der(z, Phi)
+        - mathML: 2*gammac_zz*gammacu_zy*C_xyz*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_zy*C_yyz*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_zy*C_zyz*Der(z, Phi)
+        - mathML: 2*gammac_zz*gammacu_zz*C_xzz*Der(x, Phi)
+        - mathML: 2*gammac_zz*gammacu_zz*C_yzz*Der(y, Phi)
+        - mathML: 2*gammac_zz*gammacu_zz*C_zzz*Der(z, Phi)
+        - mathML: 4*Der(z, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_xx*Der(x, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_xy*Der(x, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_xz*Der(x, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_yx*Der(y, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_yy*Der(y, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_yz*Der(y, Phi)*Der(z, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_zx*Der(z, Phi)*Der(x, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_zy*Der(z, Phi)*Der(y, Phi)
+        - mathML: (-4)*gammac_zz*gammacu_zz*Der(z, Phi)*Der(z, Phi)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: R_xx
+      operator:
+        name: Op
+        term:
+          mathML: Rc_xx+Rp_xx
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: R_xy
+      operator:
+        name: Op
+        term:
+          mathML: Rc_xy+Rp_xy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: R_xz
+      operator:
+        name: Op
+        term:
+          mathML: Rc_xz+Rp_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: R_yy
+      operator:
+        name: Op
+        term:
+          mathML: Rc_yy+Rp_yy
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: R_yz
+      operator:
+        name: Op
+        term:
+          mathML: Rc_yz+Rp_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: R_zz
+      operator:
+        name: Op
+        term:
+          mathML: Rc_zz+Rp_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: R
+      operator:
+        name: Op
+        term:
+          mathML: gammau_xx*R_xx+gammau_yy*R_yy+gammau_zz*R_zz+2*(gammau_xy*R_xy+gammau_xz*R_xz+gammau_yz*R_yz)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: dalpha_xx
+      operator:
+        name: Op
+        term:
+        - mathML: Der(x, Der(x, alpha))
+        - mathML: (-1)*C_xxx*Der(x, alpha)
+        - mathML: (-1)*C_yxx*Der(y, alpha)
+        - mathML: (-1)*C_zxx*Der(z, alpha)
+        - mathML: (-2)*Der(x, Phi)*Der(x, alpha)
+        - mathML: (-2)*Der(x, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xx*gammau_xx*Der(x, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xx*gammau_yx*Der(x, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xx*gammau_zx*Der(x, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_xx*gammau_xy*Der(y, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xx*gammau_yy*Der(y, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xx*gammau_zy*Der(y, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_xx*gammau_xz*Der(z, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xx*gammau_yz*Der(z, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xx*gammau_zz*Der(z, Phi)*Der(z, alpha)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: dalpha_xy
+      operator:
+        name: Op
+        term:
+        - mathML: Der(x, Der(y, alpha))
+        - mathML: (-1)*C_xxy*Der(x, alpha)
+        - mathML: (-1)*C_yxy*Der(y, alpha)
+        - mathML: (-1)*C_zxy*Der(z, alpha)
+        - mathML: (-2)*Der(y, Phi)*Der(x, alpha)
+        - mathML: (-2)*Der(x, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xy*gammau_xx*Der(x, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xy*gammau_yx*Der(x, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xy*gammau_zx*Der(x, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_xy*gammau_xy*Der(y, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xy*gammau_yy*Der(y, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xy*gammau_zy*Der(y, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_xy*gammau_xz*Der(z, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xy*gammau_yz*Der(z, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xy*gammau_zz*Der(z, Phi)*Der(z, alpha)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: dalpha_xz
+      operator:
+        name: Op
+        term:
+        - mathML: Der(x, Der(z, alpha))
+        - mathML: (-1)*C_xxz*Der(x, alpha)
+        - mathML: (-1)*C_yxz*Der(y, alpha)
+        - mathML: (-1)*C_zxz*Der(z, alpha)
+        - mathML: (-2)*Der(z, Phi)*Der(x, alpha)
+        - mathML: (-2)*Der(x, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_xz*gammau_xx*Der(x, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xz*gammau_yx*Der(x, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xz*gammau_zx*Der(x, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_xz*gammau_xy*Der(y, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xz*gammau_yy*Der(y, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xz*gammau_zy*Der(y, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_xz*gammau_xz*Der(z, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_xz*gammau_yz*Der(z, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_xz*gammau_zz*Der(z, Phi)*Der(z, alpha)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: dalpha_yy
+      operator:
+        name: Op
+        term:
+        - mathML: Der(y, Der(y, alpha))
+        - mathML: (-1)*C_xyy*Der(x, alpha)
+        - mathML: (-1)*C_yyy*Der(y, alpha)
+        - mathML: (-1)*C_zyy*Der(z, alpha)
+        - mathML: (-2)*Der(y, Phi)*Der(y, alpha)
+        - mathML: (-2)*Der(y, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_yy*gammau_xx*Der(x, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_yy*gammau_yx*Der(x, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_yy*gammau_zx*Der(x, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_yy*gammau_xy*Der(y, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_yy*gammau_yy*Der(y, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_yy*gammau_zy*Der(y, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_yy*gammau_xz*Der(z, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_yy*gammau_yz*Der(z, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_yy*gammau_zz*Der(z, Phi)*Der(z, alpha)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: dalpha_yz
+      operator:
+        name: Op
+        term:
+        - mathML: Der(y, Der(z, alpha))
+        - mathML: (-1)*C_xyz*Der(x, alpha)
+        - mathML: (-1)*C_yyz*Der(y, alpha)
+        - mathML: (-1)*C_zyz*Der(z, alpha)
+        - mathML: (-2)*Der(z, Phi)*Der(y, alpha)
+        - mathML: (-2)*Der(y, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_yz*gammau_xx*Der(x, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_yz*gammau_yx*Der(x, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_yz*gammau_zx*Der(x, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_yz*gammau_xy*Der(y, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_yz*gammau_yy*Der(y, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_yz*gammau_zy*Der(y, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_yz*gammau_xz*Der(z, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_yz*gammau_yz*Der(z, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_yz*gammau_zz*Der(z, Phi)*Der(z, alpha)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: dalpha_zz
+      operator:
+        name: Op
+        term:
+        - mathML: Der(z, Der(z, alpha))
+        - mathML: (-1)*C_xzz*Der(x, alpha)
+        - mathML: (-1)*C_yzz*Der(y, alpha)
+        - mathML: (-1)*C_zzz*Der(z, alpha)
+        - mathML: (-2)*Der(z, Phi)*Der(z, alpha)
+        - mathML: (-2)*Der(z, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_zz*gammau_xx*Der(x, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_zz*gammau_yx*Der(x, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_zz*gammau_zx*Der(x, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_zz*gammau_xy*Der(y, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_zz*gammau_yy*Der(y, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_zz*gammau_zy*Der(y, Phi)*Der(z, alpha)
+        - mathML: 2*gamma_zz*gammau_xz*Der(z, Phi)*Der(x, alpha)
+        - mathML: 2*gamma_zz*gammau_yz*Der(z, Phi)*Der(y, alpha)
+        - mathML: 2*gamma_zz*gammau_zz*Der(z, Phi)*Der(z, alpha)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: trdalpha
+      operator:
+        name: Op
+        term:
+          mathML: gammau_xx*dalpha_xx+2*gammau_xy*dalpha_xy+2*gammau_xz*dalpha_xz+gammau_yy*dalpha_yy+2*gammau_yz*dalpha_yz+gammau_zz*dalpha_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Psi1TF_xx
+      operator:
+        name: Op
+        term:
+          mathML: exp(-4*Phi)*((-dalpha_xx)+alpha*R_xx+1/3*trdalpha-1/3*alpha*R)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Psi1TF_xy
+      operator:
+        name: Op
+        term:
+          mathML: exp(-4*Phi)*((-dalpha_xy)+alpha*R_xy+1/3*trdalpha-1/3*alpha*R)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Psi1TF_xz
+      operator:
+        name: Op
+        term:
+          mathML: exp(-4*Phi)*((-dalpha_xz)+alpha*R_xz+1/3*trdalpha-1/3*alpha*R)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Psi1TF_yy
+      operator:
+        name: Op
+        term:
+          mathML: exp(-4*Phi)*((-dalpha_yy)+alpha*R_yy+1/3*trdalpha-1/3*alpha*R)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Psi1TF_yz
+      operator:
+        name: Op
+        term:
+          mathML: exp(-4*Phi)*((-dalpha_yz)+alpha*R_yz+1/3*trdalpha-1/3*alpha*R)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Psi1TF_zz
+      operator:
+        name: Op
+        term:
+          mathML: exp(-4*Phi)*((-dalpha_zz)+alpha*R_zz+1/3*trdalpha-1/3*alpha*R)
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_xx
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_xx*A_xx+gammacu_xy*A_xy+gammacu_xz*A_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_xy
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_xx*A_xy+gammacu_xy*A_yy+gammacu_xz*A_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_xz
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_xx*A_xz+gammacu_xy*A_yz+gammacu_xz*A_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_yx
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_yx*A_xx+gammacu_yy*A_xy+gammacu_yz*A_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_yy
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_yx*A_xy+gammacu_yy*A_yy+gammacu_yz*A_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_yz
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_yx*A_xz+gammacu_yy*A_yz+gammacu_yz*A_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_zx
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_zx*A_xx+gammacu_zy*A_xy+gammacu_zz*A_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_zy
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_zx*A_xy+gammacu_zy*A_yy+gammacu_zz*A_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Am_zz
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_zx*A_xz+gammacu_zy*A_yz+gammacu_zz*A_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Au_xx
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_xx*Am_xx+gammacu_xy*Am_xy+gammacu_xz*Am_xz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Au_xy
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_xx*Am_yx+gammacu_xy*Am_yy+gammacu_xz*Am_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Au_xz
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_xx*Am_zx+gammacu_xy*Am_zy+gammacu_xz*Am_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Au_yy
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_yx*Am_yx+gammacu_yy*Am_yy+gammacu_yz*Am_yz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Au_yz
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_yx*Am_zx+gammacu_yy*Am_zy+gammacu_yz*Am_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Au_zz
+      operator:
+        name: Op
+        term:
+          mathML: gammacu_zx*Am_zx+gammacu_zy*Am_zy+gammacu_zz*Am_zz
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: K_xx
+      operator:
+        name: Op
+        term:
+          mathML: A_xx*exp(4*Phi)+0.33333333333333*gamma_xx*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: K_xy
+      operator:
+        name: Op
+        term:
+          mathML: A_xy*exp(4*Phi)+0.33333333333333*gamma_xy*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: K_xz
+      operator:
+        name: Op
+        term:
+          mathML: A_xz*exp(4*Phi)+0.33333333333333*gamma_xz*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: K_yy
+      operator:
+        name: Op
+        term:
+          mathML: A_yy*exp(4*Phi)+0.33333333333333*gamma_yy*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: K_yz
+      operator:
+        name: Op
+        term:
+          mathML: A_yz*exp(4*Phi)+0.33333333333333*gamma_yz*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: K_zz
+      operator:
+        name: Op
+        term:
+          mathML: A_zz*exp(4*Phi)+0.33333333333333*gamma_zz*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Ku_xx
+      operator:
+        name: Op
+        term:
+          mathML: Au_xx*exp(4*Phi)+0.33333333333333*gammau_xx*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Ku_xy
+      operator:
+        name: Op
+        term:
+          mathML: Au_xy*exp(4*Phi)+0.33333333333333*gammau_xy*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Ku_xz
+      operator:
+        name: Op
+        term:
+          mathML: Au_xz*exp(4*Phi)+0.33333333333333*gammau_xz*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Ku_yy
+      operator:
+        name: Op
+        term:
+          mathML: Au_yy*exp(4*Phi)+0.33333333333333*gammau_yy*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Ku_yz
+      operator:
+        name: Op
+        term:
+          mathML: Au_yz*exp(4*Phi)+0.33333333333333*gammau_yz*trK
+    - name:
+        -self-closing: 'true'
+      auxiliaryAnalysisVariable: Ku_zz
+      operator:
+        name: Op
+        term:
+          mathML: Au_zz*exp(4*Phi)+0.33333333333333*gammau_zz*trK
+  boundaryConditions: # Se defininen las condiciones de frontera
+    boundaryPolicy:
+      boundaryRegions:
+        regionName: main # Estipulamos la region en donde se aplican
+      boundaryCondition:
+        type: # Definimos el tipo
+          extrapolation:
+            -self-closing: 'true'
+        axis: All # Definimos sobre que ejes se aplican
+        side: All #Definimos sobre que ladose se aplican
+        fields: # Definimos para que campos se aplican
+          field: [Phi, gammac_xx, gammac_xy, gammac_xz, gammac_yx, gammac_yy, gammac_yz,
+            gammac_zx, gammac_zy, gammac_zz, A_xx, A_xy, A_xz, A_yy, A_yz, A_zz, trK,
+            alpha, beta_x, beta_y, beta_z, Gam_x, Gam_y, Gam_z]
+  boundaryPrecedence: # Orden de preferencia para aplicar las condiciones de frontera (Util en caso de que condiciones se superpongan)
+    boundary: [x-Lower, x-Upper, y-Lower, y-Upper, z-Lower, z-Upper]
+  finalizationConditions: # Definimos las condiciones de finalizacion del codigo
+    finalizationCondition:
+      mathExpressions:
+        mathExpression:
+          mathML: t>=tend

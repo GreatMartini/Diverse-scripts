@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mms:spatialOperatorDiscretization xmlns:mms="urn:mathms">
+   <mms:head>
+      <mms:name>Operator Lie backward</mms:name>
+      <mms:id>a01bdb7a-3606-36f4-99cc-3a3b817fb13a</mms:id>
+      <mms:author>Carlos Palenzuela</mms:author>
+      <mms:version>lie</mms:version>
+      <mms:date>2016-06-20T00:00:00</mms:date>
+   </mms:head>
+   <mms:discretizations>
+      <mms:discretization>
+         <mms:derivativeType>
+            <mms:derivativeOrder>1</mms:derivativeOrder>
+            <mms:coordinateCombination>i</mms:coordinateCombination>
+         </mms:derivativeType>
+         <mms:mainSchema>
+            <mms:name>lie backward</mms:name>
+            <mms:id>41ae61c0-c546-3d16-b977-e7da5bb3ea21</mms:id>
+         </mms:mainSchema>
+      </mms:discretization>
+   </mms:discretizations>
+</mms:spatialOperatorDiscretization>

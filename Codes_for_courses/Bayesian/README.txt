@@ -1,0 +1,9 @@
+This is a python code that given a power spectral density signal, applies bayesian inference to match filter the signal and identify the parameters of a gaussian noise-embedded signal. 
+
+First the code adds colored noise to the signal through the "bruit_colore()" function then, "covmat()" calculates the covariance matrix of the noise-embedded signal. In the code r is the vector containing the time of the measures and y the values of the measures. The function to be adjusted is of the form:
+
+(rho_0 / (((r/rp)**0.31)*((1 + (r/rp)**1.1))**((5.5 - 0.31)/1.1))) + A * norm.pdf(r, loc=mu, scale=sigma), where the first term can be considered as the base signal and the second is the researched gaussian signal of probability density function norm.pdf with mean mu, std sigma and amplitude A.
+
+"Khi2(rho)" calculates the khi2 between the model we are testing and the signal analysed. Then, "log_prior()" creates the initial prior conditions for the five parameters of the signal rho_0, rp, A, mu, sigma. "log_likelihood(r,theta)" returns the likelihood function, "log_posterior(r,theta)" return the posterior values for the parameters theta and, "log_acceptance(theta, thetaprime)" calculates the acceptance. The function "test(theta, thetaprime, logalpha)" compares the estimator at every iteration and choses the best ones. Finally the function "metropolis(theta_init,N)" implements the algorythm with N iterations and returns the estimation of the parameters.
+
+Pd: The code had a technical issue with infinities that was not able to be solved in time, apparently it was a discrepancy between the prior and the posteriors related to the negative infinities of the logarithm of the likelihood function.
