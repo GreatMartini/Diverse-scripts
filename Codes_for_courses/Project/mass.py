@@ -78,10 +78,8 @@ def snr_calculate(strain, mass, name_strain):
     stilde = strain.to_frequencyseries()
     hp.resize(len(stilde))
     
-    # Calculate the complex (two-phase SNR)
     snr = pycbc.filter.matched_filter(hp, stilde, psd=psd, low_frequency_cutoff=flow)
 
-    # Remove regions corrupted by filter
     snr = abs(snr)
     gps = snr.sample_times
     
