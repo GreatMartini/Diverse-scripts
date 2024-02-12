@@ -91,9 +91,9 @@ def snr_calculate(strain, mass, name_strain):
 
 def test_mass(strain, mass_list, name_strain):
 
-    snrmaxtot = 0;
-    gpsmaxtot = 0;
-    massmaxtot = 0;
+    snrmaxtot = 0
+    gpsmaxtot = 0
+    massmaxtot = 0
     for mass in mass_list:
         snrc = snr_calculate(strain, mass, name_strain)
         snrmax = snrc[1][snrc[2]]
